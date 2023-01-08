@@ -2,16 +2,12 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 
-	"github.com/joho/godotenv"
+	"github.com/azmiadhani/azmiadhani.com-api/internal/utils"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("failed to load .env file")
-	}
+	utils.InitEnv()
 	fmt.Println(os.Getenv("ROUTER_PORT"))
 }
