@@ -1,0 +1,43 @@
+version: "3.8"
+services:
+ api:
+  # define where the Dockerfile that we use to built the docker image for api service
+    build: .
+    env_file:
+    # env for docker (make sure to create this file on project rood directory using .env.example as template
+      - .env
+    volumes:
+      - ./:/app
+    container_name: azmiadhani_api
+    ports:
+      - '9090:9090'
+    expose:
+      - 9090
+    depends_on:
+      # depends on db that is healthy
+      postgres-db:
+        condition: service_healthy
+    restart: always
+    command: air
+ postgres-db:
+    image: postgres:14.6-alpine
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    # [container_port]:[host_port]
+    ports:
+      - 5444:5444
+    # healthcheck to make sure service_healthy is true
+    healthcheck:
+      test: "pg_isready --username=postgres && psql --username=postgres --list"
+      interval: 1s
+      timeout: 1s
+      retries: 20
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+volumes:
+  api:
+    driver: local
+  postgres-db:
+    driver: local
