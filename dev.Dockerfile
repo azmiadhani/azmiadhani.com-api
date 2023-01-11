@@ -4,7 +4,7 @@
 # when we create image this will pull golang first
 # its going to pull it either from docker hub repository or our computer if we have already downloaded it
 # Alpine is chosen for its small footprint compared to Ubuntu
-FROM golang:1.18-alpine
+FROM golang:1.18-alpine as dev
 
 # live reload for dev
 # cached
@@ -27,3 +27,6 @@ RUN go mod download
 # use "." as source since Dockerfile is on the same level with the sourcecode
 # use "/app" as destination to make sure that our source code file not conflicting with other files on the same images
 COPY . .
+
+# run air on command line
+CMD air

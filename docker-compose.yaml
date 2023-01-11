@@ -2,7 +2,8 @@ version: "3.8"
 services:
  api:
   # define where the Dockerfile that we use to built the docker image for api service
-    build: .
+    build:
+      dockerfile: ${ENV}.Dockerfile
     env_file:
     # env for docker (make sure to create this file on project rood directory using .env.example as template
       - .env
@@ -17,8 +18,8 @@ services:
       # depends on db that is healthy
       postgres-db:
         condition: service_healthy
+    # restart when app crashes
     restart: always
-    command: air
  postgres-db:
     image: postgres:14.6-alpine
     environment:
